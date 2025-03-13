@@ -1,93 +1,82 @@
-# pypi-template
+# autogen-agentai
 
-A template for creating a Python package and publishing it to PyPI.
+[![PyPI version](https://img.shields.io/pypi/v/autogen-agentai.svg)](https://pypi.org/project/autogen-agentai/)
+[![Python versions](https://img.shields.io/pypi/pyversions/autogen-agentai.svg)](https://pypi.org/project/autogen-agentai/)
+[![License](https://img.shields.io/github/license/meepolabs/autogen-agentai.svg)](https://github.com/meepolabs/autogen-agentai/blob/main/LICENSE)
+[![Documentation Status](https://readthedocs.org/projects/autogen-agentai/badge/?version=latest)](https://autogen-agentai.readthedocs.io/en/latest/?badge=latest)
 
-## Included Boilerplate
-
-This template includes ready-to-use configuration for:
-
-- **[Poetry](https://python-poetry.org/)**: Modern Python packaging and dependency management
-- **[Ruff](https://github.com/astral-sh/ruff)**: Fast Python linter and formatter
-- **[pre-commit](https://pre-commit.com/)**: Git hooks to enforce code quality
-- **[Sphinx](https://www.sphinx-doc.org/)**: Documentation generation with auto-API docs
-- **[mypy](https://mypy.readthedocs.io/)**: Static type checking
-- **[pytest](https://docs.pytest.org/)**: Testing framework with coverage reports
-- **[Read the Docs](https://readthedocs.org/)**: Documentation hosting
-
-
-# your_package_name
-
-[![PyPI version](https://img.shields.io/pypi/v/your_package_name.svg)](https://pypi.org/project/your_package_name/)
-[![Python versions](https://img.shields.io/pypi/pyversions/your_package_name.svg)](https://pypi.org/project/your_package_name/)
-[![License](https://img.shields.io/github/license/yourusername/your_package_name.svg)](https://github.com/yourusername/your_package_name/blob/main/LICENSE)
-[![Documentation Status](https://readthedocs.org/projects/your_package_name/badge/?version=latest)](https://your_package_name.readthedocs.io/en/latest/?badge=latest)
-
-Your package description goes here. Provide a brief overview of what your package does and its main benefits.
+An extension for Microsoft AutoGen that allows running agents from [agent.ai](https://agent.ai/).
 
 ## Overview
 
-your_package_name is a Python package that [brief description]. It enables developers to:
+autogen-agentai is a Python package that serves as an extension for Microsoft's AutoGen framework, enabling the use of agent.ai agents within AutoGen. It enables developers to:
 
-- **Feature 1**: Description of feature 1
-- **Feature 2**: Description of feature 2
-- **Feature 3**: Description of feature 3
-- **Feature 4**: Description of feature 4
+- **Agent Integration**: Seamlessly integrate agent.ai agents into AutoGen workflows
+- **Agent Communication**: Enable communication between AutoGen agents and agent.ai agents
+- **Simplified API**: Provide a simple interface to configure and use agent.ai services
+- **Extensibility**: Extend AutoGen's capabilities with agent.ai's specialized AI agents
 
-## Key Features
+## Key Features (Planned)
 
-- **Feature Category 1**
-  - Subfeature 1.1
-  - Subfeature 1.2
-  - Subfeature 1.3
-  - Subfeature 1.4
+- **Agent Interoperability**
+  - Connect AutoGen's agent ecosystem with agent.ai's specialized agents
+  - Enable cross-platform agent communication
+  - Maintain agent context across different platforms
+  - Synchronize agent states and knowledge
 
-- **Feature Category 2**
-  - Subfeature 2.1
-  - Subfeature 2.2
-  - Subfeature 2.3
-  - Subfeature 2.4
+- **Configuration Management**
+  - Simple configuration for agent.ai API connections
+  - Credential management for agent.ai services
+  - Environment-based configuration options
+  - Persistent configuration storage
 
-- **Feature Category 3**
-  - Subfeature 3.1
-  - Subfeature 3.2
-  - Subfeature 3.3
-  - Subfeature 3.4
+- **Workflow Integration**
+  - Integrate agent.ai agents into existing AutoGen workflows
+  - Create hybrid workflows combining agents from both platforms
+  - Enable task delegation between different agent types
+  - Support for complex multi-agent scenarios
 
-- **Feature Category 4**
-  - Subfeature 4.1
-  - Subfeature 4.2
-  - Subfeature 4.3
-  - Subfeature 4.4
+- **Developer Tools**
+  - Debugging utilities for agent interactions
+  - Logging and monitoring capabilities
+  - Testing utilities for agent.ai integration
+  - Documentation and examples
 
 ## Installation
 
 ```bash
-pip install your_package_name
+pip install autogen-agentai
 ```
 
 Or with Poetry:
 
 ```bash
-poetry add your_package_name
+poetry add autogen-agentai
 ```
 
 ## Quick Example
 
 ```python
-from your_package_name import YourClass, your_function
+from autogen_agentai import AgentAIExtension
+import autogen
 
-# Example code showing how to use your package
-result = your_function("example input")
-print(result)
+# Initialize the extension
+agent_ai_extension = AgentAIExtension(api_key="your_agentai_api_key")
 
-# Example using a class
-instance = YourClass(parameter="value")
-output = instance.method()
+# Create an AutoGen agent with agent.ai capabilities
+assistant = autogen.AssistantAgent(
+    name="assistant",
+    llm_config={"config_key": "config_value"},
+    extensions=[agent_ai_extension]
+)
+
+# Use the agent normally in AutoGen workflows
+# The agent will have access to agent.ai capabilities
 ```
 
 ## Documentation
 
-For detailed documentation, visit [your_package_name.readthedocs.io](https://your_package_name.readthedocs.io).
+For detailed documentation, visit [autogen-agentai.readthedocs.io](https://autogen-agentai.readthedocs.io).
 
 The documentation includes:
 - Getting Started Guide

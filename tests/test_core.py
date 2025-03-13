@@ -1,19 +1,25 @@
 """Tests for core functionality."""
 
-from your_package_name import YourClass, your_function
+from autogen_agentai import AgentAIExtension
 
 
-def test_your_class() -> None:
-    """Test YourClass functionality."""
-    instance = YourClass(parameter="test")
-    result = instance.method()
-    assert result == "Operation completed with parameter: test"
-    assert instance.parameter == "test"
+def test_agent_ai_extension_init() -> None:
+    """Test AgentAIExtension initialization."""
+    api_key = "test_api_key"
+    extension = AgentAIExtension(api_key=api_key)
+    assert extension.api_key == api_key
+    assert extension.config == {"api_key": api_key}
 
 
-def test_your_function() -> None:
-    """Test your_function functionality."""
-    result = your_function("test input")
-    assert result["input"] == "test input"
-    assert result["processed"] is True
-    assert result["result"] == "Processed: test input"
+def test_agent_ai_extension_register() -> None:
+    """Test AgentAIExtension register method."""
+    extension = AgentAIExtension(api_key="test_api_key")
+    # This should not raise an exception
+    extension.register(None)
+
+
+def test_agent_ai_extension_connect() -> None:
+    """Test AgentAIExtension connect_to_agentai method."""
+    extension = AgentAIExtension(api_key="test_api_key")
+    # Method currently returns None as it's a placeholder
+    assert extension.connect_to_agentai("test_agent_id") is None

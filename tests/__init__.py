@@ -1,1 +1,1 @@
-"""Test package for your_package_name."""
+"""Test package for autogen-agentai."""

@@ -1,0 +1,45 @@
+api_url: https://api-lr.agent.ai/v1
+web_url: https://api.agent.ai
+timeout: 60.0
+endpoints:
+  # Web URL endpoints
+  web_list_agents: /agents/list_public
+
+  # Get Data endpoints
+  api_web_page_content: /action/grab_web_text
+  api_web_page_screenshot: /action/grab_web_screenshot
+  api_youtube_video_transcript: /action/get_youtube_transcript
+  api_youtube_channel_data: /action/get_youtube_channel
+  api_get_twitter_users: /action/get_twitter_users
+  api_get_company_earnings_info: /action/company_financial_info
+  api_get_company_financial_profile: /action/company_financial_profile
+  api_get_domain_info: /action/domain_info
+  api_google_news_data: /action/get_google_news
+  api_youtube_search_results: /action/run_youtube_search
+  api_search_results: /action/get_search_results
+  api_get_recent_tweets: /action/get_recent_tweets
+  api_get_linkedin_profile: /action/get_linkedin_profile
+  api_get_linkedin_activity: /action/get_linkedin_activity
+  api_enrich_company_data: /action/get_company_object
+  api_get_bluesky_posts: /action/get_bluesky_posts
+  api_search_bluesky_posts: /action/search_bluesky_posts
+  api_get_instagram_profile: /action/get_instagram_profile
+  api_get_instagram_followers: /action/get_instagram_followers
+
+  # Use AI endpoints
+  api_convert_text_to_speech: /action/output_audio
+  api_use_llm: /action/invoke_llm
+  api_generate_image: /action/generate_image
+
+  # Advanced endpoints
+  api_invoke_agent: /action/invoke_agent
+  api_rest_call: /action/rest_call
+  api_convert_file: /action/convert_file
+  api_convert_file_options: /action/convert_file_options
+  api_start_browser_operator: /action/start_browser_operator
+  api_browser_operator_results: /action/results_browser_operator
+  api_store_variable: /action/store_variable_to_database
+  api_retrieve_variable: /action/get_variable_from_database
+
+  # Create Output endpoints
+  api_create_output: /action/save_to_file

@@ -1,166 +1,651 @@
+"""Configuration for agent.ai API endpoints."""
+
 from pydantic import BaseModel, Field
+
+from autogen_agentai.types.url_endpoint import (
+    Endpoint,
+    EndpointParameter,
+    ParameterType,
+    RequestMethod,
+    UrlType,
+)
 
 
 class AgentAIEndpoints(BaseModel):
     """Endpoints for agent.ai API."""
 
     # Web URL endpoints - used by the agent.ai web app
-    web_list_agents: str = Field(
-        default="/agents/list_public", description="Endpoint to list all agents"
+    list_agents: Endpoint = Field(
+        default=Endpoint(
+            url="/agents/list_public",
+            url_type=UrlType.WEB,
+            method=RequestMethod.POST,
+            description="Endpoint to list all agents.",
+            requires_auth=False,
+            response_content_type="application/json",
+            request_content_type="application/json",
+        ),
+    )
+
+    get_agent_info: Endpoint = Field(
+        default=Endpoint(
+            url="/agents/get",
+            url_type=UrlType.WEB,
+            method=RequestMethod.POST,
+            description="Get information about a specific agent.",
+            body_parameters=[
+                EndpointParameter(
+                    name="agent_id",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="ID of the agent to retrieve",
+                ),
+            ],
+        ),
     )
 
     # Get Data endpoints
-    api_web_page_content: str = Field(
-        default="/action/grab_web_text",
-        description="""Extract text content from a specified web
-        page or domain.""",
+    web_page_content: Endpoint = Field(
+        default=Endpoint(
+            url="/action/grab_web_text",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Extract text content from a specified web page "
+            + "or domain.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the web page to extract text from",
+                ),
+                EndpointParameter(
+                    name="mode",
+                    param_type=ParameterType.STRING,
+                    required=False,
+                    description="TBA",
+                    default="scrape",
+                ),
+            ],
+        ),
     )
-    api_web_page_screenshot: str = Field(
-        default="/action/grab_web_screenshot",
-        description="Capture a screenshot of a web page.",
+
+    web_page_screenshot: Endpoint = Field(
+        default=Endpoint(
+            url="/action/grab_web_screenshot",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Capture a screenshot of a web page.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the web page to capture",
+                ),
+            ],
+            response_content_type="application/json",
+        ),
     )
-    api_youtube_video_transcript: str = Field(
-        default="/action/get_youtube_transcript",
-        description="""Fetches the transcript
-        of a YouTube video using the video URL.""",
+
+    youtube_video_transcript: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_youtube_transcript",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetches the transcript of a YouTube video using the "
+            + "video URL.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the YouTube video",
+                ),
+            ],
+        ),
     )
-    api_youtube_channel_data: str = Field(
-        default="/action/get_youtube_channel",
-        description="""Retrieve detailed information about a YouTube channel,
-        including its videos and statistics.""",
+
+    youtube_channel_data: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_youtube_channel",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve detailed information about a YouTube "
+            + "channel.",
+            body_parameters=[
+                EndpointParameter(
+                    name="channelId",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="ID of the YouTube channel",
+                ),
+            ],
+        ),
     )
-    api_get_twitter_users: str = Field(
-        default="/action/get_twitter_users",
-        description="""Search and retrieve Twitter user profiles based on
-        specific keywords for targeted social media analysis.""",
+
+    get_twitter_users: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_twitter_users",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Search and retrieve Twitter user profiles.",
+            body_parameters=[
+                EndpointParameter(
+                    name="query",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Search query for Twitter users",
+                ),
+            ],
+        ),
     )
-    api_get_company_earnings_info: str = Field(
-        default="/action/company_financial_info",
-        description="""Retrieve company earnings information for a given
-        stock symbol over time.""",
+
+    get_company_earnings_info: Endpoint = Field(
+        default=Endpoint(
+            url="/action/company_financial_info",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve company earnings information for a given "
+            + "stock symbol.",
+            body_parameters=[
+                EndpointParameter(
+                    name="ticker",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Stock ticker symbol",
+                ),
+            ],
+        ),
     )
-    api_get_company_financial_profile: str = Field(
-        default="/action/company_financial_profile",
-        description="""Retrieve detailed financial and company profile
-        information for a given stock symbol, such as market cap and the last
-        known stock price for any company.""",
+
+    get_company_financial_profile: Endpoint = Field(
+        default=Endpoint(
+            url="/action/company_financial_profile",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve detailed financial and company profile "
+            + "information.",
+            body_parameters=[
+                EndpointParameter(
+                    name="ticker",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Stock ticker symbol",
+                ),
+            ],
+        ),
     )
-    api_get_domain_info: str = Field(
-        default="/action/domain_info",
-        description="""Retrieve detailed information about a domain, including
-        its registration details, DNS records, and more.""",
+
+    get_domain_info: Endpoint = Field(
+        default=Endpoint(
+            url="/action/domain_info",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve detailed information about a domain.",
+            body_parameters=[
+                EndpointParameter(
+                    name="domain",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Domain name to lookup",
+                ),
+            ],
+        ),
     )
-    api_google_news_data: str = Field(
-        default="/action/get_google_news",
-        description="""Fetch news articles based on queries and date ranges to
-        stay updated on relevant topics or trends.""",
+
+    google_news_data: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_google_news",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetch news articles based on queries and date "
+            + "ranges.",
+            body_parameters=[
+                EndpointParameter(
+                    name="query",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Search query for news articles",
+                ),
+                EndpointParameter(
+                    name="days",
+                    param_type=ParameterType.INTEGER,
+                    required=False,
+                    description="Number of days to look back",
+                    default=7,
+                ),
+            ],
+        ),
     )
-    api_youtube_search_results: str = Field(
-        default="/action/run_youtube_search",
-        description="""Perform a YouTube search and retrieve results for
-        specified queries.""",
+
+    youtube_search_results: Endpoint = Field(
+        default=Endpoint(
+            url="/action/run_youtube_search",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Perform a YouTube search and retrieve results.",
+            body_parameters=[
+                EndpointParameter(
+                    name="query",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Search query for YouTube",
+                ),
+            ],
+        ),
     )
-    api_search_results: str = Field(
-        default="/action/get_search_results",
-        description="""Fetch search results from Google or YouTube for
-        specific queries, providing valuable insights and content.""",
+
+    search_results: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_search_results",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetch search results from Google or YouTube.",
+            body_parameters=[
+                EndpointParameter(
+                    name="query",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Search query",
+                ),
+                EndpointParameter(
+                    name="source",
+                    param_type=ParameterType.STRING,
+                    required=False,
+                    description="Search source (google or youtube)",
+                    default="google",
+                ),
+            ],
+        ),
     )
-    api_get_recent_tweets: str = Field(
-        default="/action/get_recent_tweets",
-        description="""This action fetches recent tweets from a specified
-        Twitter handle.""",
+
+    get_recent_tweets: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_recent_tweets",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetch recent tweets from a specified Twitter handle.",
+            body_parameters=[
+                EndpointParameter(
+                    name="handle",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Twitter handle to fetch tweets from",
+                ),
+            ],
+        ),
     )
-    api_get_linkedin_profile: str = Field(
-        default="/action/get_linkedin_profile",
-        description="""Retrieve detailed information from a specified LinkedIn
-        profile for professional insights.""",
+
+    get_linkedin_profile: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_linkedin_profile",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve detailed information from a LinkedIn "
+            + "profile.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="LinkedIn profile URL",
+                ),
+            ],
+        ),
     )
-    api_get_linkedin_activity: str = Field(
-        default="/action/get_linkedin_activity",
-        description="""Retrieve recent LinkedIn posts from specified profiles
-        to analyze professional activity and engagement.""",
+
+    get_linkedin_activity: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_linkedin_activity",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve recent LinkedIn posts from specified "
+            + "profiles.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="LinkedIn profile URL",
+                ),
+            ],
+        ),
     )
-    api_enrich_company_data: str = Field(
-        default="/action/get_company_object",
-        description="""Gather enriched company data using Breeze Intelligence
-        for deeper analysis and insights.""",
+
+    enrich_company_data: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_company_object",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Gather enriched company data using Breeze "
+            + "Intelligence.",
+            body_parameters=[
+                EndpointParameter(
+                    name="company_name",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Name of the company to enrich",
+                ),
+            ],
+        ),
     )
-    api_get_bluesky_posts: str = Field(
-        default="/action/get_bluesky_posts",
-        description="""Fetch recent posts from a specified Bluesky user handle,
-        making it easy to monitor activity on the platform.""",
+
+    get_bluesky_posts: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_bluesky_posts",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetch recent posts from a specified Bluesky user "
+            + "handle.",
+            body_parameters=[
+                EndpointParameter(
+                    name="handle",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Bluesky handle to fetch posts from",
+                ),
+            ],
+        ),
     )
-    api_search_bluesky_posts: str = Field(
-        default="/action/search_bluesky_posts",
-        description="""Search for Bluesky posts matching specific keywords or
-        criteria to gather social media insights.""",
+
+    search_bluesky_posts: Endpoint = Field(
+        default=Endpoint(
+            url="/action/search_bluesky_posts",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Search for Bluesky posts matching specific keywords.",
+            body_parameters=[
+                EndpointParameter(
+                    name="query",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Search query for Bluesky posts",
+                ),
+            ],
+        ),
     )
-    api_get_instagram_profile: str = Field(
-        default="/action/get_instagram_profile",
-        description="""Fetch detailed profile information for a specified
-        Instagram username.""",
+
+    get_instagram_profile: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_instagram_profile",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Fetch detailed profile information for Instagram.",
+            body_parameters=[
+                EndpointParameter(
+                    name="username",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Instagram username",
+                ),
+            ],
+        ),
     )
-    api_get_instagram_followers: str = Field(
-        default="/action/get_instagram_followers",
-        description="""Retrieve a list of top followers from a specified
-        Instagram account for social media analysis.""",
+
+    get_instagram_followers: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_instagram_followers",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve a list of top followers from an Instagram "
+            + "account.",
+            body_parameters=[
+                EndpointParameter(
+                    name="username",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Instagram username",
+                ),
+            ],
+        ),
     )
 
     # Use AI endpoints
-    api_convert_text_to_speech: str = Field(
-        default="/action/output_audio",
-        description="Convert text to a generated audio voice file.",
+    convert_text_to_speech: Endpoint = Field(
+        default=Endpoint(
+            url="/action/output_audio",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Convert text to a generated audio voice file.",
+            body_parameters=[
+                EndpointParameter(
+                    name="text",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Text to convert to speech",
+                ),
+            ],
+            response_content_type="audio/mpeg",
+        ),
     )
-    api_use_llm: str = Field(
-        default="/action/invoke_llm",
-        description="""Invoke a language model (LLM) to generate text based on
-        input instructions, enabling creative and dynamic text outputs.""",
+
+    use_llm: Endpoint = Field(
+        default=Endpoint(
+            url="/action/invoke_llm",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Invoke a language model to generate text.",
+            body_parameters=[
+                EndpointParameter(
+                    name="model",
+                    param_type=ParameterType.STRING,
+                    required=False,
+                    description="Model to use",
+                    default="gpt-4o",
+                ),
+                EndpointParameter(
+                    name="prompt",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Prompt to send to the LLM",
+                ),
+            ],
+        ),
     )
-    api_generate_image: str = Field(
-        default="/action/generate_image",
-        description="""Create visually engaging images using AI models, with
-        options for style, aspect ratio, and detailed prompts.""",
+
+    generate_image: Endpoint = Field(
+        default=Endpoint(
+            url="/action/generate_image",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Create images using AI models.",
+            body_parameters=[
+                EndpointParameter(
+                    name="prompt",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Text prompt for image generation",
+                ),
+            ],
+            response_content_type="application/json",
+        ),
     )
 
     # Advanced endpoints
-    api_invoke_agent: str = Field(
-        default="/action/invoke_agent",
-        description="""Trigger another agent to perform additional processing
-        or data handling within workflows.""",
+    invoke_agent: Endpoint = Field(
+        default=Endpoint(
+            url="/action/invoke_agent",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Trigger another agent to perform processing.",
+            body_parameters=[
+                EndpointParameter(
+                    name="agentId",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="ID of the agent to invoke",
+                ),
+                EndpointParameter(
+                    name="inputs",
+                    param_type=ParameterType.OBJECT,
+                    required=True,
+                    description="Parameters to pass to the agent",
+                ),
+            ],
+        ),
     )
-    api_rest_call: str = Field(
-        default="/action/rest_call",
-        description="Make a REST API call to a specified endpoint.",
+
+    rest_call: Endpoint = Field(
+        default=Endpoint(
+            url="/action/rest_call",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Make a REST API call to a specified endpoint.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL to call",
+                ),
+                EndpointParameter(
+                    name="method",
+                    param_type=ParameterType.STRING,
+                    required=False,
+                    description="HTTP method",
+                    default="GET",
+                ),
+            ],
+        ),
     )
-    api_convert_file: str = Field(
-        default="/action/convert_file",
-        description="Convert a file to a different format.",
+
+    convert_file: Endpoint = Field(
+        default=Endpoint(
+            url="/action/convert_file",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Convert a file to a different format.",
+            body_parameters=[
+                EndpointParameter(
+                    name="file",
+                    param_type=ParameterType.FILE,
+                    required=True,
+                    description="File to convert",
+                ),
+                EndpointParameter(
+                    name="output_format",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Output format",
+                ),
+            ],
+            request_content_type="multipart/form-data",
+        ),
     )
-    api_convert_file_options: str = Field(
-        default="/action/convert_file_options",
-        description="""Gets the full set of options that a file extension can
-        be converted to.""",
+
+    convert_file_options: Endpoint = Field(
+        default=Endpoint(
+            url="/action/convert_file_options",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Gets file conversion options for a file extension.",
+            body_parameters=[
+                EndpointParameter(
+                    name="extension",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="File extension",
+                ),
+            ],
+        ),
     )
-    api_start_browser_operator: str = Field(
-        default="/action/start_browser_operator",
-        description="""Starts a browser operator to interact with web pages
-        and perform actions.""",
+
+    start_browser_operator: Endpoint = Field(
+        default=Endpoint(
+            url="/action/start_browser_operator",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Starts a browser operator to interact with web "
+            + "pages.",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Starting URL",
+                ),
+            ],
+        ),
     )
-    api_browser_operator_results: str = Field(
-        default="/action/results_browser_operator",
-        description="Get the browser operator session results.",
+
+    browser_operator_results: Endpoint = Field(
+        default=Endpoint(
+            url="/action/results_browser_operator",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Get the browser operator session results.",
+            body_parameters=[
+                EndpointParameter(
+                    name="session_id",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Browser session ID",
+                ),
+            ],
+        ),
     )
-    api_store_variable: str = Field(
-        default="/action/store_variable_to_database",
-        description="Store a variable in the agent’s database.",
+
+    store_variable: Endpoint = Field(
+        default=Endpoint(
+            url="/action/store_variable_to_database",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Store a variable in the agent's database.",
+            body_parameters=[
+                EndpointParameter(
+                    name="key",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Variable key",
+                ),
+                EndpointParameter(
+                    name="value",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Variable value",
+                ),
+            ],
+        ),
     )
-    api_retrieve_variable: str = Field(
-        default="/action/get_variable_from_database",
-        description="Retrieve a variable from the agent’s database.",
+
+    retrieve_variable: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_variable_from_database",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Retrieve a variable from the agent's database.",
+            body_parameters=[
+                EndpointParameter(
+                    name="key",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Variable key",
+                ),
+            ],
+        ),
     )
 
     # Create Output endpoints
-    api_create_output: str = Field(
-        default="/action/save_to_file",
-        description="Save text content as a downloadable file.",
+    create_output: Endpoint = Field(
+        default=Endpoint(
+            url="/action/save_to_file",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description="Save text content as a downloadable file.",
+            body_parameters=[
+                EndpointParameter(
+                    name="content",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Content to save",
+                ),
+                EndpointParameter(
+                    name="filename",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Filename",
+                ),
+            ],
+        ),
     )

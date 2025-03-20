@@ -3,43 +3,471 @@ web_url: https://api.agent.ai
 timeout: 60.0
 endpoints:
   # Web URL endpoints
-  web_list_agents: /agents/list_public
+  list_agents:
+    url: /agents/list_public
+    url_type: web
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: false
+
+  get_agent_info:
+    url: /agents/get
+    url_type: web
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: agent_id
+        param_type: string
+        required: true
+        description: ID of the agent to retrieve
 
   # Get Data endpoints
-  api_web_page_content: /action/grab_web_text
-  api_web_page_screenshot: /action/grab_web_screenshot
-  api_youtube_video_transcript: /action/get_youtube_transcript
-  api_youtube_channel_data: /action/get_youtube_channel
-  api_get_twitter_users: /action/get_twitter_users
-  api_get_company_earnings_info: /action/company_financial_info
-  api_get_company_financial_profile: /action/company_financial_profile
-  api_get_domain_info: /action/domain_info
-  api_google_news_data: /action/get_google_news
-  api_youtube_search_results: /action/run_youtube_search
-  api_search_results: /action/get_search_results
-  api_get_recent_tweets: /action/get_recent_tweets
-  api_get_linkedin_profile: /action/get_linkedin_profile
-  api_get_linkedin_activity: /action/get_linkedin_activity
-  api_enrich_company_data: /action/get_company_object
-  api_get_bluesky_posts: /action/get_bluesky_posts
-  api_search_bluesky_posts: /action/search_bluesky_posts
-  api_get_instagram_profile: /action/get_instagram_profile
-  api_get_instagram_followers: /action/get_instagram_followers
+  web_page_content:
+    url: /action/grab_web_text
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: URL of the web page to extract text from
+      - name: mode
+        param_type: string
+        required: false
+        description: Crawler mode (scrape/crawl)
+        default: scrape
+
+  web_page_screenshot:
+    url: /action/grab_web_screenshot
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: URL of the web page to capture
+
+  youtube_video_transcript:
+    url: /action/get_youtube_transcript
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: URL of the YouTube video
+
+  youtube_channel_data:
+    url: /action/get_youtube_channel
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: channelId
+        param_type: string
+        required: true
+        description: ID of the YouTube channel
+
+  get_twitter_users:
+    url: /action/get_twitter_users
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: query
+        param_type: string
+        required: true
+        description: Search query for Twitter users
+
+  get_company_earnings_info:
+    url: /action/company_financial_info
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: ticker
+        param_type: string
+        required: true
+        description: Stock ticker symbol
+
+  get_company_financial_profile:
+    url: /action/company_financial_profile
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: ticker
+        param_type: string
+        required: true
+        description: Stock ticker symbol
+
+  get_domain_info:
+    url: /action/domain_info
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: domain
+        param_type: string
+        required: true
+        description: Domain name to lookup
+
+  google_news_data:
+    url: /action/get_google_news
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: query
+        param_type: string
+        required: true
+        description: Search query for news articles
+      - name: days
+        param_type: integer
+        required: false
+        description: Number of days to look back
+        default: 7
+
+  youtube_search_results:
+    url: /action/run_youtube_search
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: query
+        param_type: string
+        required: true
+        description: Search query for YouTube
+
+  search_results:
+    url: /action/get_search_results
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: query
+        param_type: string
+        required: true
+        description: Search query
+      - name: source
+        param_type: string
+        required: false
+        description: Search source (google or youtube)
+        default: google
+
+  get_recent_tweets:
+    url: /action/get_recent_tweets
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: handle
+        param_type: string
+        required: true
+        description: Twitter handle to fetch tweets from
+
+  get_linkedin_profile:
+    url: /action/get_linkedin_profile
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: LinkedIn profile URL
+
+  get_linkedin_activity:
+    url: /action/get_linkedin_activity
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: LinkedIn profile URL
+
+  enrich_company_data:
+    url: /action/get_company_object
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: company_name
+        param_type: string
+        required: true
+        description: Name of the company to enrich
+
+  get_bluesky_posts:
+    url: /action/get_bluesky_posts
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: handle
+        param_type: string
+        required: true
+        description: Bluesky handle to fetch posts from
+
+  search_bluesky_posts:
+    url: /action/search_bluesky_posts
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: query
+        param_type: string
+        required: true
+        description: Search query for Bluesky posts
+
+  get_instagram_profile:
+    url: /action/get_instagram_profile
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: username
+        param_type: string
+        required: true
+        description: Instagram username
+
+  get_instagram_followers:
+    url: /action/get_instagram_followers
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: username
+        param_type: string
+        required: true
+        description: Instagram username
 
   # Use AI endpoints
-  api_convert_text_to_speech: /action/output_audio
-  api_use_llm: /action/invoke_llm
-  api_generate_image: /action/generate_image
+  convert_text_to_speech:
+    url: /action/output_audio
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: audio/mpeg
+    requires_auth: true
+    body_parameters:
+      - name: text
+        param_type: string
+        required: true
+        description: Text to convert to speech
+
+  use_llm:
+    url: /action/invoke_llm
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: model
+        param_type: string
+        required: false
+        description: Model to use
+        default: gpt-4o
+      - name: prompt
+        param_type: string
+        required: true
+        description: Prompt to send to the LLM
+
+  generate_image:
+    url: /action/generate_image
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: prompt
+        param_type: string
+        required: true
+        description: Text prompt for image generation
 
   # Advanced endpoints
-  api_invoke_agent: /action/invoke_agent
-  api_rest_call: /action/rest_call
-  api_convert_file: /action/convert_file
-  api_convert_file_options: /action/convert_file_options
-  api_start_browser_operator: /action/start_browser_operator
-  api_browser_operator_results: /action/results_browser_operator
-  api_store_variable: /action/store_variable_to_database
-  api_retrieve_variable: /action/get_variable_from_database
+  invoke_agent:
+    url: /action/invoke_agent
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: agentId
+        param_type: string
+        required: true
+        description: ID of the agent to invoke
+      - name: inputs
+        param_type: object
+        required: true
+        description: Parameters to pass to the agent
+
+  rest_call:
+    url: /action/rest_call
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: URL to call
+      - name: method
+        param_type: string
+        required: false
+        description: HTTP method
+        default: GET
+
+  convert_file:
+    url: /action/convert_file
+    url_type: api
+    method: POST
+    request_content_type: multipart/form-data
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: file
+        param_type: file
+        required: true
+        description: File to convert
+      - name: output_format
+        param_type: string
+        required: true
+        description: Output format
+
+  convert_file_options:
+    url: /action/convert_file_options
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: extension
+        param_type: string
+        required: true
+        description: File extension
+
+  start_browser_operator:
+    url: /action/start_browser_operator
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: url
+        param_type: string
+        required: true
+        description: Starting URL
+
+  browser_operator_results:
+    url: /action/results_browser_operator
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: session_id
+        param_type: string
+        required: true
+        description: Browser session ID
+
+  store_variable:
+    url: /action/store_variable_to_database
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: key
+        param_type: string
+        required: true
+        description: Variable key
+      - name: value
+        param_type: string
+        required: true
+        description: Variable value
+
+  retrieve_variable:
+    url: /action/get_variable_from_database
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: key
+        param_type: string
+        required: true
+        description: Variable key
 
   # Create Output endpoints
-  api_create_output: /action/save_to_file
+  create_output:
+    url: /action/save_to_file
+    url_type: api
+    method: POST
+    request_content_type: application/json
+    response_content_type: application/json
+    requires_auth: true
+    body_parameters:
+      - name: content
+        param_type: string
+        required: true
+        description: Content to save
+      - name: filename
+        param_type: string
+        required: true
+        description: Filename

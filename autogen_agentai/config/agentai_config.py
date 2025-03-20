@@ -10,19 +10,19 @@ class AgentAIConfig(BaseModel):
     """Configuration for the agent.ai client."""
 
     api_url: str = Field(
-        os.getenv("AGENTAI_API_URL", "https://api-lr.agent.ai/v1"),
+        default=os.getenv("AGENTAI_API_URL", "https://api-lr.agent.ai/v1"),
         description="Base URL for the agent.ai API",
     )
     api_key: str = Field(
-        os.getenv("AGENTAI_API_KEY", "sk-agentai-api-key"),
+        default=os.getenv("AGENTAI_API_KEY", "sk-agentai-api-key"),
         description="API key for authenticating with agent.ai",
     )
     web_url: str = Field(
-        os.getenv("AGENTAI_WEB_URL", "https://api.agent.ai"),
+        default=os.getenv("AGENTAI_WEB_URL", "https://api.agent.ai"),
         description="Web URL for the agent.ai web app",
     )
     timeout: float = Field(
-        60.0, description="Timeout in seconds for API requests"
+        default=60.0, description="Timeout in seconds for API requests"
     )
     endpoints: AgentAIEndpoints = Field(
         default_factory=lambda: AgentAIEndpoints(),

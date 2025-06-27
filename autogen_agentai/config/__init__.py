@@ -1,6 +1,6 @@
 """Configuration for agent.ai integration."""
 
-from .agentai_config import AgentAIConfig
-from .agentai_endpoints import AgentAIEndpoints
+from autogen_agentai.config.agentai_config import AgentAIConfig
+from autogen_agentai.config.agentai_endpoints import AgentAIEndpoints
 
-__all__: list[str] = ["AgentAIConfig", "AgentAIEndpoints"]
+__all__: list[str] = ["AgentAIEndpoints", "AgentAIConfig"]

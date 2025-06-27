@@ -18,7 +18,7 @@ class AgentAIConfig(BaseModel):
         description="API key for authenticating with agent.ai",
     )
     web_url: str = Field(
-        default=os.getenv("AGENTAI_WEB_URL", "https://api.agent.ai"),
+        default=os.getenv("AGENTAI_WEB_URL", "https://api.agent.ai/api"),
         description="Web URL for the agent.ai web app",
     )
     timeout: float = Field(

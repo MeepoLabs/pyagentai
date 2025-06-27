@@ -22,6 +22,7 @@ class AgentAIEndpoints(BaseModel):
             method=RequestMethod.POST,
             description="Endpoint to list all agents.",
             requires_auth=False,
+            body_parameters=[],
             response_content_type="application/json",
             request_content_type="application/json",
         ),

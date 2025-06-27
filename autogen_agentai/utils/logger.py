@@ -31,37 +31,6 @@ LOG_LEVEL_MAP = {
     "CRITICAL": logging.CRITICAL,
 }
 
-# Global flag to track if logging has been initialized
-_logging_initialized = False
-
-# Cache for loggers
-_logger_cache: dict[str, structlog.stdlib.BoundLogger] = {}
-
-
-def get_logger(name: str) -> structlog.stdlib.BoundLogger:
-    """Get a structured logger with the given name.
-
-    If logging hasn't been initialized yet, this will initialize it with
-    default settings.
-
-    Args:
-        name: The name of the logger.
-
-    Returns:
-        A structured logger.
-    """
-    global _logging_initialized
-
-    if not _logging_initialized:
-        initialize_logging()
-
-    if name in _logger_cache:
-        return _logger_cache[name]
-
-    logger: structlog.stdlib.BoundLogger = structlog.get_logger(name)
-    _logger_cache[name] = logger
-    return logger
-
 
 def initialize_logging(
     log_level: str | None = None,
@@ -91,12 +60,6 @@ def initialize_logging(
     Returns:
         None
     """
-    global _logging_initialized
-
-    # Skip if already initialized
-    if _logging_initialized:
-        return
-
     # Use provided values or environment variables/defaults
     level = log_level or LOG_LEVEL
     level_num = LOG_LEVEL_MAP.get(level, logging.INFO)
@@ -167,22 +130,13 @@ def initialize_logging(
             # Choose renderer based on format type
             structlog.processors.JSONRenderer()
             if format_type.lower() == "json"
-            else structlog.dev.ConsoleRenderer(),
+            else structlog.dev.ConsoleRenderer(colors=True),
         ],
         wrapper_class=structlog.stdlib.AsyncBoundLogger,
         logger_factory=structlog.stdlib.LoggerFactory(),
         cache_logger_on_first_use=True,
     )
 
-    # Mark as initialized
-    _logging_initialized = True
 
-    # Get a logger to log the initialization
-    logger = structlog.get_logger("autogen_agentai.logging")
-    logger.info(
-        "Logging initialized",
-        level=level,
-        format=format_type,
-        file_enabled=file_enabled,
-        console_enabled=console_enabled,
-    )
+# Initialize logging with default settings when this module is imported
+initialize_logging()

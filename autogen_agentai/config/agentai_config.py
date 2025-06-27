@@ -3,7 +3,7 @@ import os
 import yaml
 from pydantic import BaseModel, Field
 
-from . import AgentAIEndpoints
+from .agentai_endpoints import AgentAIEndpoints
 
 
 class AgentAIConfig(BaseModel):

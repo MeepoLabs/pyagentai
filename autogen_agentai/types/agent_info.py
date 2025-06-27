@@ -8,7 +8,7 @@ class AgentInfo(BaseModel):
         ..., description="The unique identifier for the agent."
     )
     name: str = Field(..., description="The name of the agent.")
-    description: str = Field(
+    description: str | None = Field(
         "", description="A brief description of the agent."
     )
     tags: list[str] = Field([], description="Tags associated with the agent.")

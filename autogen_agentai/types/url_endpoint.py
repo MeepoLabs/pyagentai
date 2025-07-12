@@ -37,13 +37,19 @@ class EndpointParameter(BaseModel):
     name: str = Field(description="Name of the parameter")
     param_type: ParameterType = Field(description="Data type of the parameter")
     required: bool = Field(
-        default=False, description="Whether the parameter is required"
+        default=False, description="Whether the parameter is mandatory"
     )
     description: str = Field(
         default="", description="Description of the parameter"
     )
-    default: str | int | bool | dict | list | None = Field(
-        default=None, description="Default value for the parameter"
+    allowed_values: list[str | int | bool | None] = Field(
+        default=[], description="Allowed values for the parameter"
+    )
+    validate_parameter: bool = Field(
+        default=True,
+        description=(
+            "Whether to validate the parameter against the allowed " "values"
+        ),
     )
 
 

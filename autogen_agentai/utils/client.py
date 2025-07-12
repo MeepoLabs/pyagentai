@@ -7,7 +7,12 @@ import httpx
 import structlog
 
 from autogen_agentai.config.agentai_config import AgentAIConfig
-from autogen_agentai.types.url_endpoint import Endpoint, UrlType
+from autogen_agentai.types.url_endpoint import (
+    Endpoint,
+    EndpointParameter,
+    ParameterType,
+    UrlType,
+)
 
 from .method_registrar_mixin import _MethodRegistrarMixin
 
@@ -74,6 +79,63 @@ class AgentAIClient(_MethodRegistrarMixin):
 
         await self._logger.debug("HTTP client closed")
 
+    async def _validate_parameter(
+        self, param: EndpointParameter, value: Any
+    ) -> Any:
+        """
+        Validate a parameter with the Endpoint config
+
+        Args:
+            param: The parameter to validate.
+            value: The value to validate.
+
+        Returns:
+            The validated value.
+
+        Raises:
+            ValueError: If the value is invalid.
+
+        """
+        # allowed-value validation
+        if param.validate_parameter and value not in param.allowed_values:
+            raise ValueError(
+                f"Invalid value for {param.name}: '{value}'. "
+                f"Allowed: {param.allowed_values}"
+            )
+
+        # data type validation
+        type_map = {
+            ParameterType.STRING: str,
+            ParameterType.INTEGER: int,
+            ParameterType.BOOLEAN: bool,
+            ParameterType.OBJECT: dict,
+            ParameterType.ARRAY: list,
+            ParameterType.FILE: str,  # Assuming file is a path string
+        }
+        expected_type = type_map.get(param.param_type)
+
+        # isinstance(True, int) is True, so handle bool separately
+        if param.param_type == ParameterType.INTEGER and isinstance(
+            value, bool
+        ):
+            error_message = (
+                f"Invalid type for '{param.name}'. "
+                f"Expected integer, got boolean."
+            )
+            await self._logger.error(error_message)
+            raise ValueError(error_message)
+
+        if expected_type and not isinstance(value, expected_type):
+            error_message = (
+                f"Invalid type for '{param.name}'. "
+                f"Expected {param.param_type.value}, "
+                f"got {type(value).__name__}."
+            )
+            await self._logger.error(error_message)
+            raise ValueError(error_message)
+
+        return value
+
     async def _make_request(
         self, endpoint: Endpoint, data: dict[str, Any] | None = None
     ) -> httpx.Response:
@@ -102,19 +164,32 @@ class AgentAIClient(_MethodRegistrarMixin):
             base_url = self.config.api_url
 
         url = f"{base_url}{endpoint.url}"
-        query_params = {}
-        body_params = {}
+        query_params: dict[str, Any] = {}
+        body_params: dict[str, Any] = {}
 
         # Parse query and body parameters from data
         for param in endpoint.query_parameters:
-            query_params[param.name] = data.pop(param.name, param.default)
+            value = data.get(param.name, None)
+            if value is None:
+                if not param.required:
+                    continue
+                raise ValueError(f"Parameter '{param.name}' is required.")
+
+            value = await self._validate_parameter(param, value)
+            query_params[param.name] = value
 
         for param in endpoint.body_parameters:
-            body_params[param.name] = data.pop(param.name, param.default)
-        body_params.update(data)
+            value = data.get(param.name, None)
+            if value is None:
+                if not param.required:
+                    continue
+                raise ValueError(f"Parameter '{param.name}' is required.")
+
+            value = await self._validate_parameter(param, value)
+            body_params[param.name] = value
 
         # Parse headers from endpoint
-        headers = {}
+        headers: dict[str, str] = {}
         headers["Content-Type"] = endpoint.request_content_type
         headers["Accept"] = endpoint.response_content_type
 

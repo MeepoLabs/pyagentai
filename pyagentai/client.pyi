@@ -1,8 +1,14 @@
 # pyagentai/client.pyi
-from typing import Any
+from collections.abc import Awaitable, Callable
+from typing import Any, TypeVar
+
+import httpx
 
 from pyagentai.config.agentai_config import AgentAIConfig
 from pyagentai.types.agent_info import AgentInfo
+from pyagentai.types.url_endpoint import Endpoint
+
+T = TypeVar("T", bound=Callable[..., Awaitable[Any]])
 
 class AgentAIClient:
     """
@@ -24,6 +30,15 @@ class AgentAIClient:
         config: AgentAIConfig | None = None,
     ) -> None: ...
     async def close(self) -> None: ...
+
+    # --- Internal methods used by registered functions ---
+    async def _make_request(
+        self, endpoint: Endpoint, data: dict[str, Any] | None = None
+    ) -> httpx.Response: ...
+
+    # --- Class methods for dynamic registration ---
+    @classmethod
+    def register(cls, func: T, *, name: str | None = None) -> T: ...
 
     # --- Dynamically registered methods ---
     async def find_agents(

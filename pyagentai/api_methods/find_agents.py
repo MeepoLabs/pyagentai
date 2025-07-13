@@ -47,6 +47,13 @@ async def find_agents(
     if intent is not None and intent.strip():
         data["intent"] = intent
 
+    # validate pagination parameters
+    if offset < 0 or limit <= 0:
+        await self._logger.error(
+            f"Invalid pagination parameters: offset={offset}, limit={limit}"
+        )
+        return []
+
     response = await self._make_request(
         endpoint=endpoint,
         data=data,
@@ -60,9 +67,6 @@ async def find_agents(
     ]
 
     # Apply pagination in memory
-    if offset < 0 or limit <= 0:
-        return []
-
     start_idx = min(offset, len(agents))
     end_idx = min(start_idx + limit, len(agents))
     paginated_agents = agents[start_idx:end_idx]

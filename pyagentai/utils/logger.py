@@ -56,11 +56,10 @@ def initialize_logging(
     Returns:
         None
     """
-    # Remove any previously added pyagentai handlers.
+    # Remove any previously added pyagentai handlers
     root_logger = logging.getLogger("pyagentai")
     for handler in root_logger.handlers[:]:
-        if getattr(handler, "_pyagentai_managed", False):
-            root_logger.removeHandler(handler)
+        root_logger.removeHandler(handler)
 
     # Use provided values or environment variables/defaults
     level = log_level or LOG_LEVEL or "INFO"
@@ -102,29 +101,35 @@ def initialize_logging(
 
     # Set up file logging if enabled
     if file_enabled:
-        # Create log directory if it doesn't exist
-        os.makedirs(directory, exist_ok=True)
+        try:
+            # Create log directory if it doesn't exist
+            os.makedirs(directory, exist_ok=True)
 
-        # Use provided file name or default to 'pyagentai'
-        file_name = sanitize_text(log_file_name or "pyagentai")
+            # Use provided file name or default to 'pyagentai'
+            file_name = sanitize_text(log_file_name or "pyagentai")
 
-        # Configure file handler with rotation
-        log_file_path = f"{directory}/{file_name}.log"
-        file_handler = handlers.TimedRotatingFileHandler(
-            filename=log_file_path,
-            when=rotate_when,
-            backupCount=int(rotate_backup),
-            encoding="utf-8",
-        )
-        file_handler.setLevel(level_num)
-        setattr(file_handler, "_pyagentai_managed", True)  # noqa: B010
-        handlers_list.append(file_handler)  # type: ignore
+            # Configure file handler with rotation
+            log_file_path = f"{directory}/{file_name}.log"
+            file_handler = handlers.TimedRotatingFileHandler(
+                filename=log_file_path,
+                when=rotate_when,
+                backupCount=int(rotate_backup),
+                encoding="utf-8",
+            )
+            file_handler.setLevel(level_num)
+            setattr(file_handler, "_pyagentai_managed", True)  # noqa: B010
+            handlers_list.append(file_handler)  # type: ignore
+        except (OSError, PermissionError):
+            # Could not create log directory or write to file
+            pass
 
-    # Configure root logger
-    if handlers_list:
-        root_logger.setLevel(level_num)
-        for handler in handlers_list:
-            root_logger.addHandler(handler)
+    root_logger.setLevel(level_num)
+    for handler in handlers_list:
+        root_logger.addHandler(handler)
+
+    # If no handlers are configured, add a NullHandler
+    if not handlers_list:
+        root_logger.addHandler(logging.NullHandler())
 
     # Configure structlog
     structlog.configure(

@@ -1,6 +1,6 @@
-# Contributing to autogen-agentai
+# Contributing to pyagentai
 
-Thank you for your interest in contributing to autogen-agentai! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to pyagentai! This document provides guidelines and instructions for contributing to this project.
 
 ## Development Setup
 
@@ -14,8 +14,8 @@ Thank you for your interest in contributing to autogen-agentai! This document pr
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/meepolabs/autogen-agentai.git
-   cd autogen-agentai
+   git clone https://github.com/meepolabs/pyagentai.git
+   cd pyagentai
    ```
 
 2. Install dependencies with Poetry:
@@ -44,7 +44,7 @@ poetry run ruff format .
 We use [MyPy](https://mypy.readthedocs.io/) for static type checking. To check your code:
 
 ```bash
-poetry run mypy autogen_agentai
+poetry run mypy pyagentai
 ```
 
 ### Running Tests
@@ -58,7 +58,7 @@ poetry run pytest
 To run tests with coverage:
 
 ```bash
-poetry run pytest --cov=autogen_agentai
+poetry run pytest --cov=pyagentai
 ```
 
 ### Documentation
@@ -103,4 +103,4 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 
 ## License
 
-By contributing to autogen-agentai, you agree that your contributions will be licensed under the project's [GNU General Public License v3.0 (GPLv3)](LICENSE).
+By contributing to pyagentai, you agree that your contributions will be licensed under the project's [GNU General Public License v3.0 (GPLv3)](LICENSE).

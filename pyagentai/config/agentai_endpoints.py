@@ -46,6 +46,15 @@ class AgentAIEndpoints(BaseModel):
                     name="query",
                     param_type=ParameterType.STRING,
                     required=False,
+                    description=(
+                        "Text to search for in agent names and descriptions."
+                    ),
+                    validate_parameter=False,
+                ),
+                EndpointParameter(
+                    name="tag",
+                    param_type=ParameterType.STRING,
+                    required=False,
                     description="Filter agents by specific tag.",
                     validate_parameter=False,
                 ),

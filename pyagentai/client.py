@@ -142,8 +142,7 @@ class AgentAIClient(_MethodRegistrarMixin):
 
         Args:
             endpoint: The API endpoint to call.
-            data: The request body data.
-            query_params: The query parameters.
+            data: Data to build the request body and query parameters.
 
         Returns:
             The httpx response object.

@@ -1,56 +1,43 @@
-Welcome to autogen-agentai's documentation!
-===================================
+Welcome to pyagentai's documentation!
+=======================================
 
-.. image:: https://img.shields.io/pypi/v/autogen-agentai.svg
-   :target: https://pypi.org/project/autogen-agentai/
+.. image:: https://img.shields.io/pypi/v/pyagentai.svg
+   :target: https://pypi.org/project/pyagentai/
    :alt: PyPI version
 
-.. image:: https://img.shields.io/pypi/pyversions/autogen-agentai.svg
-   :target: https://pypi.org/project/autogen-agentai/
+.. image:: https://img.shields.io/pypi/pyversions/pyagentai.svg
+   :target: https://pypi.org/project/pyagentai/
    :alt: Python versions
 
-.. image:: https://img.shields.io/github/license/meepolabs/autogen-agentai.svg
-   :target: https://github.com/meepolabs/autogen-agentai/blob/main/LICENSE
+.. image:: https://img.shields.io/github/license/meepolabs/pyagentai.svg
+   :target: https://github.com/meepolabs/pyagentai/blob/main/LICENSE
    :alt: License
 
-.. image:: https://readthedocs.org/projects/autogen-agentai/badge/?version=latest
-   :target: https://autogen-agentai.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/pyagentai/badge/?version=latest
+   :target: https://pyagentai.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-An extension for Microsoft AutoGen that allows running agents from agent.ai.
+A Python library for seamless integration with `agent.ai <https://agent.ai/>`_ APIs.
 
 Overview
 --------
 
-autogen-agentai is a Python package that serves as an extension for Microsoft's AutoGen framework, enabling the use of agent.ai agents within AutoGen. It enables developers to:
+``pyagentai`` is a Python package that provides a client for interacting with the agent.ai platform. It enables developers to:
 
-- **Agent Integration**: Seamlessly integrate agent.ai agents into AutoGen workflows
-- **Agent Communication**: Enable communication between AutoGen agents and agent.ai agents
-- **Simplified API**: Provide a simple interface to configure and use agent.ai services
-- **Extensibility**: Extend AutoGen's capabilities with agent.ai's specialized AI agents
-
-Key Features
-------------
-
-Agent Interoperability
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-- Connect AutoGen's agent ecosystem with agent.ai's specialized agents
-- Enable cross-platform agent communication
-- Maintain agent context across different platforms
-- Synchronize agent states and knowledge
+-   Easily connect to the agent.ai API.
+-   Discover and interact with agents available on the platform.
+-   Integrate agent.ai services into their own Python applications.
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
    installation
-   core_concepts
    getting_started
 
 Indices and tables
 ==================
 
 * :ref:`genindex`
-* :ref:`modindex`
+* :ref`modindex`
 * :ref:`search`

@@ -2,40 +2,40 @@ Installation
 ============
 
 Requirements
------------
+------------
 
-autogen-agentai requires Python 3.10 or higher.
+pyagentai requires Python 3.10 or higher.
 
 Installing from PyPI
--------------------
+--------------------
 
-The recommended way to install autogen-agentai is from PyPI:
+The recommended way to install pyagentai is from PyPI:
 
 .. code-block:: bash
 
-    pip install autogen-agentai
+    pip install pyagentai
 
 Or with Poetry:
 
 .. code-block:: bash
 
-    poetry add autogen-agentai
+    poetry add pyagentai
 
 Installing from Source
----------------------
+----------------------
 
-You can also install autogen-agentai directly from the source code:
+You can also install pyagentai directly from the source code:
 
 .. code-block:: bash
 
-    git clone https://github.com/meepolabs/autogen-agentai.git
-    cd autogen-agentai
+    git clone https://github.com/meepolabs/pyagentai.git
+    cd pyagentai
     pip install .
 
 Or with Poetry:
 
 .. code-block:: bash
 
-    git clone https://github.com/meepolabs/autogen-agentai.git
-    cd autogen-agentai
+    git clone https://github.com/meepolabs/pyagentai.git
+    cd pyagentai
     poetry install

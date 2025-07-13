@@ -1,21 +1,21 @@
-"""Sphinx configuration for autogen-agentai documentation."""
+"""Sphinx configuration for pyagentai documentation."""
 
 import os
 import sys
 from datetime import datetime
 
-# Add autogen_agentai to the path so that autodoc can find it
+# Add pyagentai to the path so that autodoc can find it
 sys.path.insert(0, os.path.abspath("../.."))
 
 try:
-    import autogen_agentai  # noqa: E402
+    import pyagentai  # noqa: E402
 
-    version = autogen_agentai.__version__
+    version = pyagentai.__version__
 except (ImportError, AttributeError):
-    version = "0.1.0"  # Fallback version
+    version = "0.1.1"  # Fallback version
 
 # Project information
-project = "autogen-agentai"
+project = "pyagentai"
 copyright_str = f"{datetime.now().year}, MeepoLabs"
 author = "MeepoLabs"
 release = version
@@ -35,7 +35,7 @@ exclude_patterns: list[str] = []
 # HTML output
 html_theme = "sphinx_rtd_theme"
 html_static_path: list[str] = ["_static"]
-html_title = f"autogen-agentai {version}"
+html_title = f"pyagentai {version}"
 
 # Intersphinx mapping
 intersphinx_mapping: dict[str, tuple[str, str | None]] = {

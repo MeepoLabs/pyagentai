@@ -1,6 +1,5 @@
 """Client for interacting with agent.ai API."""
 
-import asyncio
 from typing import Any
 
 import httpx
@@ -48,7 +47,6 @@ class AgentAIClient(_MethodRegistrarMixin):
 
         self._http_client: httpx.AsyncClient | None = None
         self._agent_cache: dict[str, dict[str, Any]] = {}
-        self._event_loop = asyncio.get_event_loop()
         self._initialize_client()
 
     def _initialize_client(self) -> httpx.AsyncClient:
@@ -64,9 +62,6 @@ class AgentAIClient(_MethodRegistrarMixin):
                 },
                 timeout=self.config.timeout,
                 http2=True,
-            )
-            self._event_loop.create_task(
-                self._logger.debug("HTTP client initialized")
             )
         return self._http_client
 
@@ -96,7 +91,11 @@ class AgentAIClient(_MethodRegistrarMixin):
 
         """
         # allowed-value validation
-        if param.validate_parameter and value not in param.allowed_values:
+        if (
+            param.validate_parameter
+            and param.allowed_values
+            and value not in param.allowed_values
+        ):
             raise ValueError(
                 f"Invalid value for {param.name}: '{value}'. "
                 f"Allowed: {param.allowed_values}"

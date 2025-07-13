@@ -1,4 +1,4 @@
-"""Text processing utilities for autogen-agentai."""
+"""Text processing utilities for pyagentai."""
 
 
 def sanitize_text(text: str) -> str:

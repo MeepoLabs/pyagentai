@@ -6,15 +6,14 @@ from typing import Any
 import httpx
 import structlog
 
-from autogen_agentai.config.agentai_config import AgentAIConfig
-from autogen_agentai.types.url_endpoint import (
+from pyagentai.config.agentai_config import AgentAIConfig
+from pyagentai.types.url_endpoint import (
     Endpoint,
     EndpointParameter,
     ParameterType,
     UrlType,
 )
-
-from .method_registrar_mixin import _MethodRegistrarMixin
+from pyagentai.utils.method_registrar_mixin import _MethodRegistrarMixin
 
 
 class AgentAIClient(_MethodRegistrarMixin):
@@ -39,7 +38,7 @@ class AgentAIClient(_MethodRegistrarMixin):
             config: The configuration for the client.
                 If not provided, a default configuration is used.
         """
-        self._logger = structlog.get_logger("autogen_agentai.client")
+        self._logger = structlog.get_logger("pyagentai")
         if config is None:
             config = AgentAIConfig()
         self.config = config
@@ -197,7 +196,7 @@ class AgentAIClient(_MethodRegistrarMixin):
             headers["Authorization"] = f"Bearer {self.config.api_key}"
 
         try:
-            await self._logger.debug(
+            await self._logger.info(
                 f"Making {endpoint.method} request to {url}"
             )
             response = await client.request(
@@ -216,8 +215,7 @@ class AgentAIClient(_MethodRegistrarMixin):
                 error_json = e.response.json()
                 error_detail = f"{error_detail}: {error_json}"
             except Exception as exc:  # noqa: W0718
-                # ignore this error
-                await self._logger.debug(f"Error parsing response: {exc}")
+                error_detail = f"Error parsing response: {str(exc)}"
             await self._logger.error(f"API request failed: {error_detail}")
             raise ValueError(f"API request failed: {error_detail}") from e
 
@@ -236,4 +234,4 @@ class AgentAIClient(_MethodRegistrarMixin):
 
 # This import will trigger the registration of decorated methods.
 # It MUST be at the bottom of the file to avoid circular import errors.
-from . import api_methods  # noqa: E402 F401
+from pyagentai import api_methods  # noqa: E402 F401

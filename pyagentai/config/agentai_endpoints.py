@@ -2,7 +2,7 @@
 
 from pydantic import BaseModel, Field
 
-from autogen_agentai.types.url_endpoint import (
+from pyagentai.types.url_endpoint import (
     Endpoint,
     EndpointParameter,
     ParameterType,

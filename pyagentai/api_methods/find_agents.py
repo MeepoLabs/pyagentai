@@ -1,5 +1,5 @@
-from autogen_agentai.types.agent_info import AgentInfo
-from autogen_agentai.utils.client import AgentAIClient
+from pyagentai.client import AgentAIClient
+from pyagentai.types.agent_info import AgentInfo
 
 
 @AgentAIClient.register
@@ -55,7 +55,6 @@ async def find_agents(
     response_data = response.json()
 
     # Extract agents from response
-    # print(response_data)
     agents_data: list[dict] = response_data.get("response", [])
     agents = [
         AgentInfo.model_validate(agent_data) for agent_data in agents_data
@@ -65,7 +64,7 @@ async def find_agents(
     start_idx = min(offset, len(agents))
     end_idx = min(start_idx + limit, len(agents))
     paginated_agents = agents[start_idx:end_idx]
-    await self._logger.debug(
+    await self._logger.info(
         f"Returning {len(paginated_agents)} agents "
         f"(offset: {offset}, limit: {limit})"
     )

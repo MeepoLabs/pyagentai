@@ -1,5 +1,5 @@
 from collections.abc import Awaitable, Callable
-from typing import TypeVar
+from typing import Any, TypeVar
 
 T = TypeVar("T", bound=Callable[..., Awaitable])
 
@@ -9,7 +9,12 @@ class _MethodRegistrarMixin:
     Mixin to register methods on a class.
     """
 
-    _registered: dict[str, Callable] = {}
+    _registered: dict[str, Callable]
+
+    def __init_subclass__(cls, **kwargs: Any) -> None:
+        """Initialize registered methods for each subclass."""
+        super().__init_subclass__(**kwargs)
+        cls._registered = {}
 
     @classmethod
     def register(cls, func: T, *, name: str | None = None) -> T:

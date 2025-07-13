@@ -32,20 +32,19 @@ async def find_agents(
     endpoint = self.config.endpoints.find_agents
     data = {}
 
-    if status is not None:
-        status = status.strip().lower()
-        data["status"] = status
+    if status is not None and status.strip():
+        data["status"] = status.strip().lower()
 
-    if slug is not None:
+    if slug is not None and slug.strip():
         data["slug"] = slug
 
-    if query is not None:
+    if query is not None and query.strip():
         data["query"] = query
 
-    if tag is not None:
+    if tag is not None and tag.strip():
         data["tag"] = tag
 
-    if intent is not None:
+    if intent is not None and intent.strip():
         data["intent"] = intent
 
     response = await self._make_request(
@@ -61,6 +60,9 @@ async def find_agents(
     ]
 
     # Apply pagination in memory
+    if offset < 0 or limit <= 0:
+        return []
+
     start_idx = min(offset, len(agents))
     end_idx = min(start_idx + limit, len(agents))
     paginated_agents = agents[start_idx:end_idx]

@@ -1,1 +1,1 @@
-"""Testcases for API methods."""
+"""Test cases for API methods."""

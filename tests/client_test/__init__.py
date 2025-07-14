@@ -1,1 +1,1 @@
-"""Testcases for client."""
+"""Test cases for client."""

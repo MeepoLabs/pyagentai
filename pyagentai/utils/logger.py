@@ -56,10 +56,11 @@ def initialize_logging(
     Returns:
         None
     """
-    # Remove any previously added pyagentai handlers
+    # Remove any previously added pyagentai handlers.
     root_logger = logging.getLogger("pyagentai")
     for handler in root_logger.handlers[:]:
-        root_logger.removeHandler(handler)
+        if getattr(handler, "_pyagentai_managed", False):
+            root_logger.removeHandler(handler)
 
     # Use provided values or environment variables/defaults
     level = log_level or LOG_LEVEL or "INFO"
@@ -90,7 +91,7 @@ def initialize_logging(
         rotate_backup = 4  # default to 4
 
     # Create handlers list
-    handlers_list = []
+    handlers_list: list[logging.Handler] = []
 
     # Set up console logging if enabled
     if console_enabled:
@@ -123,13 +124,15 @@ def initialize_logging(
             # Could not create log directory or write to file
             pass
 
+    # If no handlers are configured, add a NullHandler
+    if len(handlers_list) == 0:
+        null_handler = logging.NullHandler()
+        setattr(null_handler, "_pyagentai_managed", True)  # noqa: B010
+        handlers_list.append(null_handler)
+
     root_logger.setLevel(level_num)
     for handler in handlers_list:
         root_logger.addHandler(handler)
-
-    # If no handlers are configured, add a NullHandler
-    if not handlers_list:
-        root_logger.addHandler(logging.NullHandler())
 
     # Configure structlog
     structlog.configure(
@@ -170,8 +173,13 @@ def _auto_configure_if_env_vars_set() -> None:
         # remove all logging handlers for pyagentai
         root_logger = logging.getLogger("pyagentai")
         for handler in root_logger.handlers[:]:
-            root_logger.removeHandler(handler)
-        root_logger.addHandler(logging.NullHandler())
+            if getattr(handler, "_pyagentai_managed", False):
+                root_logger.removeHandler(handler)
+
+        # Configure a managed NullHandler if no other config is set
+        null_handler = logging.NullHandler()
+        setattr(null_handler, "_pyagentai_managed", True)  # noqa: B010
+        root_logger.addHandler(null_handler)
 
         # configure structlog with AsyncBoundLogger
         structlog.configure(

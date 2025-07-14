@@ -36,16 +36,16 @@ async def find_agents(
         data["status"] = status.strip().lower()
 
     if slug is not None and slug.strip():
-        data["slug"] = slug
+        data["slug"] = slug.strip().lower()
 
     if query is not None and query.strip():
-        data["query"] = query
+        data["query"] = query.strip().lower()
 
     if tag is not None and tag.strip():
-        data["tag"] = tag
+        data["tag"] = tag.strip().lower()
 
     if intent is not None and intent.strip():
-        data["intent"] = intent
+        data["intent"] = intent.strip().lower()
 
     # validate pagination parameters
     if offset < 0 or limit <= 0:

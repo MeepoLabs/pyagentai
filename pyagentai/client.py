@@ -91,11 +91,12 @@ class AgentAIClient(_MethodRegistrarMixin):
 
         """
         # allowed-value validation
-        if (
+        should_validate = (
             param.validate_parameter
             and param.allowed_values
             and value not in param.allowed_values
-        ):
+        )
+        if should_validate:
             raise ValueError(
                 f"Invalid value for {param.name}: '{value}'. "
                 f"Allowed: {param.allowed_values}"

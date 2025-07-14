@@ -26,29 +26,27 @@ async def find_agents(
         limit: Maximum number of agents to return.
         offset: Offset for pagination.
 
+    Note:
+        Limit of 0 will return all agents from the offset.
+
     Returns:
         List of available agents with their summarized information.
     """
     endpoint = self.config.endpoints.find_agents
     data = {}
-
-    if status is not None and status.strip():
-        data["status"] = status.strip().lower()
-
-    if slug is not None and slug.strip():
-        data["slug"] = slug.strip().lower()
-
-    if query is not None and query.strip():
-        data["query"] = query.strip().lower()
-
-    if tag is not None and tag.strip():
-        data["tag"] = tag.strip().lower()
-
-    if intent is not None and intent.strip():
-        data["intent"] = intent.strip().lower()
+    parameters = {
+        "status": status,
+        "slug": slug,
+        "query": query,
+        "tag": tag,
+        "intent": intent,
+    }
+    for key, value in parameters.items():
+        if value is not None and value.strip():
+            data[key] = value.strip().lower()
 
     # validate pagination parameters
-    if offset < 0 or limit <= 0:
+    if offset < 0 or limit < 0:
         await self._logger.error(
             f"Invalid pagination parameters: offset={offset}, limit={limit}"
         )
@@ -68,7 +66,8 @@ async def find_agents(
 
     # Apply pagination in memory
     start_idx = min(offset, len(agents))
-    end_idx = min(start_idx + limit, len(agents))
+    end_idx = len(agents) if limit == 0 else min(start_idx + limit, len(agents))
+
     paginated_agents = agents[start_idx:end_idx]
     await self._logger.info(
         f"Returning {len(paginated_agents)} agents "

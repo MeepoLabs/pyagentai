@@ -148,11 +148,11 @@ async def test_find_agents_pagination(
 
 @pytest.mark.asyncio()
 @pytest.mark.parametrize(
-    ("offset", "limit"),
+    ("offset", "limit", "expected_length"),
     [
-        (-1, 5),  # Negative offset
-        (0, -1),  # Negative limit
-        (0, 0),  # Zero limit
+        (-1, 5, 0),  # Negative offset
+        (0, -1, 0),  # Negative limit
+        (0, 0, 5),  # Zero limit should return all agents
     ],
 )
 async def test_find_agents_pagination_edge_cases(
@@ -160,15 +160,14 @@ async def test_find_agents_pagination_edge_cases(
     mock_agents_response: dict,
     offset: int,
     limit: int,
+    expected_length: int,
 ) -> None:
     """Test pagination edge cases like negative or zero values."""
     mock_response = httpx.Response(200, json=mock_agents_response)
     client._make_request = AsyncMock(return_value=mock_response)
 
-    # These should not raise errors and should return an empty list
-    # because the resulting index slicing will be empty.
     paginated_agents = await client.find_agents(offset=offset, limit=limit)
-    assert len(paginated_agents) == 0
+    assert len(paginated_agents) == expected_length
 
 
 @pytest.mark.asyncio()

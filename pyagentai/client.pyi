@@ -41,6 +41,7 @@ class AgentAIClient:
     def register(cls, func: T, *, name: str | None = None) -> T: ...
 
     # --- Dynamically registered methods ---
+    # --- Find Agents ---
     async def find_agents(
         self,
         status: str | None = None,
@@ -51,8 +52,17 @@ class AgentAIClient:
         limit: int = 50,
         offset: int = 0,
     ) -> list[AgentInfo]: ...
+
+    # --- Grab Web Text ---
     async def grab_web_text(
         self,
         url: str,
         mode: str = "scrape",
     ) -> tuple[str, dict]: ...
+
+    # --- Grab Web Screenshot ---
+    async def grab_web_screenshot(
+        self,
+        url: str,
+        ttl_for_screenshot: int = 3600,
+    ) -> str: ...

@@ -106,3 +106,37 @@ class AgentAIEndpoints(BaseModel):
             ],
         ),
     )
+
+    grab_web_screenshot: Endpoint = Field(
+        default=Endpoint(
+            url="/action/grab_web_screenshot",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description=(
+                "Capture a visual screenshot of a specified web page for "
+                "documentation or analysis."
+            ),
+            requires_auth=True,
+            response_content_type="application/json",
+            request_content_type="application/json",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the web page to capture.",
+                    validate_parameter=False,
+                ),
+                EndpointParameter(
+                    name="ttl_for_screenshot",
+                    param_type=ParameterType.INTEGER,
+                    required=True,
+                    description=(
+                        "Cache expiration time for the screenshot in seconds."
+                    ),
+                    allowed_values=[3600, 86400, 604800, 18144000],
+                    validate_parameter=True,
+                ),
+            ],
+        ),
+    )

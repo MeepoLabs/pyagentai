@@ -2,6 +2,7 @@ from unittest.mock import AsyncMock
 
 import httpx
 import pytest
+from pytest import MonkeyPatch  # noqa: PT013
 
 from pyagentai.client import AgentAIClient
 from pyagentai.types.agent_info import AgentInfo
@@ -78,14 +79,16 @@ def test_mock_agent_response_structure(mock_agents_response: dict) -> None:
 
 @pytest.mark.asyncio()
 async def test_find_agents_calls_make_request_correctly(
-    client: AgentAIClient, mock_agents_response: dict
+    client: AgentAIClient, mock_agents_response: dict, monkeypatch: MonkeyPatch
 ) -> None:
     """
     Test that find_agents processes arguments and calls
     _make_request correctly.
     """
     mock_response = httpx.Response(200, json=mock_agents_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     await client.find_agents(status=" public ", tag="a", query="search term")
 
@@ -101,14 +104,16 @@ async def test_find_agents_calls_make_request_correctly(
 
 @pytest.mark.asyncio()
 async def test_find_agents_parses_response(
-    client: AgentAIClient, mock_agents_response: dict
+    client: AgentAIClient, mock_agents_response: dict, monkeypatch: MonkeyPatch
 ) -> None:
     """
     Test that find_agents correctly parses the JSON response into
     AgentInfo objects.
     """
     mock_response = httpx.Response(200, json=mock_agents_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     agents = await client.find_agents()
 
@@ -136,10 +141,13 @@ async def test_find_agents_pagination(
     offset: int,
     limit: int,
     expected_ids: list[str],
+    monkeypatch: MonkeyPatch,
 ) -> None:
     """Test the in-memory pagination of find_agents."""
     mock_response = httpx.Response(200, json=mock_agents_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     paginated_agents = await client.find_agents(offset=offset, limit=limit)
 
@@ -161,10 +169,13 @@ async def test_find_agents_pagination_edge_cases(
     offset: int,
     limit: int,
     expected_length: int,
+    monkeypatch: MonkeyPatch,
 ) -> None:
     """Test pagination edge cases like negative or zero values."""
     mock_response = httpx.Response(200, json=mock_agents_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     paginated_agents = await client.find_agents(offset=offset, limit=limit)
     assert len(paginated_agents) == expected_length
@@ -173,11 +184,16 @@ async def test_find_agents_pagination_edge_cases(
 @pytest.mark.asyncio()
 @pytest.mark.parametrize("status_val", [None, ""])
 async def test_find_agents_handles_none_and_empty_params(
-    client: AgentAIClient, mock_agents_response: dict, status_val: str | None
+    client: AgentAIClient,
+    mock_agents_response: dict,
+    status_val: str | None,
+    monkeypatch: MonkeyPatch,
 ) -> None:
     """Test that None and empty string parameters are handled correctly."""
     mock_response = httpx.Response(200, json=mock_agents_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     await client.find_agents(status=status_val)
 
@@ -190,11 +206,14 @@ async def test_find_agents_handles_none_and_empty_params(
 @pytest.mark.asyncio()
 async def test_find_agents_handles_empty_response(
     client: AgentAIClient,
+    monkeypatch: MonkeyPatch,
 ) -> None:
     """Test find_agents with an empty list of agents in the response."""
-    empty_response = {"response": []}
+    empty_response: dict = {"response": []}
     mock_response = httpx.Response(200, json=empty_response)
-    client._make_request = AsyncMock(return_value=mock_response)
+    monkeypatch.setattr(
+        client, "_make_request", AsyncMock(return_value=mock_response)
+    )
 
     agents = await client.find_agents()
 

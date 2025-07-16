@@ -51,3 +51,8 @@ class AgentAIClient:
         limit: int = 50,
         offset: int = 0,
     ) -> list[AgentInfo]: ...
+    async def grab_web_text(
+        self,
+        url: str,
+        mode: str = "scrape",
+    ) -> tuple[str, dict]: ...

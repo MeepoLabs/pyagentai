@@ -72,3 +72,37 @@ class AgentAIEndpoints(BaseModel):
             ],
         ),
     )
+
+    grab_web_text: Endpoint = Field(
+        default=Endpoint(
+            url="/action/grab_web_text",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description=(
+                "Extract text content from a specified web page or domain."
+            ),
+            requires_auth=True,
+            response_content_type="application/json",
+            request_content_type="application/json",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the web page to extract text from.",
+                    validate_parameter=False,
+                ),
+                EndpointParameter(
+                    name="mode",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description=(
+                        "Crawler mode: 'scrape' for one page,"
+                        " 'crawl' for up to 100 pages."
+                    ),
+                    allowed_values=["scrape", "crawl"],
+                    validate_parameter=True,
+                ),
+            ],
+        ),
+    )

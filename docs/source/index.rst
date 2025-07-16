@@ -34,3 +34,5 @@ Overview
 
    installation
    getting_started
+   configuration
+   api_reference

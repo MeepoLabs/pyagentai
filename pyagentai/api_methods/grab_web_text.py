@@ -11,12 +11,29 @@ async def grab_web_text(
 ) -> tuple[str, dict]:
     """Extract text content from a specified web page or domain.
 
+    This function can be used to either scrape a single page or crawl a
+    website up to a certain depth to collect text.
+
+    For more details, see the `official Grab Web Text API documentation
+    <https://docs.agent.ai/api-reference/get-data/web-page-content>`_.
+
     Args:
-        url: URL of the web page to extract text from.
-        mode: Crawler mode: 'scrape' for one page, 'crawl' for up to 100 pages.
+        url: The URL of the web page to extract text from. Must be a fully
+            qualified URL, including ``http://`` or ``https://``.
+        mode: The crawler mode. Can be one of:
+
+            - ``"scrape"``: Extracts content from the provided URL only.
+            - ``"crawl"``: Crawls the website starting from the URL,
+              collecting content from up to 100 pages.
 
     Returns:
-        Text content of the web page or domain.
+        A tuple containing:
+
+        - The extracted text content as a single string.
+        - A dictionary with metadata about the operation.
+
+    Raises:
+        ValueError: If the provided URL is invalid.
     """
     endpoint = self.config.endpoints.grab_web_text
     data = {}

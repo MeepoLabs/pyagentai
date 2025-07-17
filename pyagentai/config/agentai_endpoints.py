@@ -164,3 +164,27 @@ class AgentAIEndpoints(BaseModel):
             ],
         ),
     )
+
+    get_youtube_channel: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_youtube_channel",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description=(
+                "Retrieve detailed information about a YouTube channel,"
+                " including its videos and statistics."
+            ),
+            requires_auth=True,
+            response_content_type="application/json",
+            request_content_type="application/json",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the YouTube channel.",
+                    validate_parameter=False,
+                )
+            ],
+        ),
+    )

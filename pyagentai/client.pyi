@@ -72,3 +72,9 @@ class AgentAIClient:
         self,
         url: str,
     ) -> tuple[str, dict]: ...
+
+    # --- Get YouTube Channel ---
+    async def get_youtube_channel(
+        self,
+        url: str,
+    ) -> dict: ...

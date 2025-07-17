@@ -49,7 +49,6 @@ async def get_youtube_channel(
         data=data,
     )
     response_data = response.json()
-
     channel_info: dict = response_data.get("response", {})
 
     return channel_info

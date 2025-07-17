@@ -3,7 +3,7 @@ from unittest.mock import AsyncMock
 
 import httpx
 import pytest
-from _pytest.monkeypatch import MonkeyPatch
+from pytest import MonkeyPatch  # noqa: PT013
 
 from pyagentai.client import AgentAIClient
 

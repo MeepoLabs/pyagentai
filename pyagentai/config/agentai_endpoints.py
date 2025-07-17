@@ -188,3 +188,35 @@ class AgentAIEndpoints(BaseModel):
             ],
         ),
     )
+
+    get_twitter_users: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_twitter_users",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description=(
+                "Search and retrieve Twitter user profiles based on"
+                " specific keywords for targeted social media analysis."
+            ),
+            requires_auth=True,
+            response_content_type="application/json",
+            request_content_type="application/json",
+            body_parameters=[
+                EndpointParameter(
+                    name="keywords",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="Keywords to find relevant Twitter users.",
+                    validate_parameter=False,
+                ),
+                EndpointParameter(
+                    name="num_users",
+                    param_type=ParameterType.INTEGER,
+                    required=True,
+                    description="Number of user profiles to retrieve.",
+                    allowed_values=[1, 5, 10, 25, 50, 100],
+                    validate_parameter=True,
+                ),
+            ],
+        ),
+    )

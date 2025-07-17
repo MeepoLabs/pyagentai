@@ -78,3 +78,10 @@ class AgentAIClient:
         self,
         url: str,
     ) -> dict: ...
+
+    # --- Get Twitter Users ---
+    async def get_twitter_users(
+        self,
+        keywords: str,
+        num_users: int = 1,
+    ) -> list[str]: ...

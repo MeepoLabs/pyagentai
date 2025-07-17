@@ -8,7 +8,7 @@ Client
 ------
 
 .. autoclass:: pyagentai.client.AgentAIClient
-   :members: __init__, close, find_agents, grab_web_text, grab_web_screenshot
+   :members: __init__, close, find_agents, grab_web_text, grab_web_screenshot, get_youtube_transcript
    :undoc-members:
    :show-inheritance:
 

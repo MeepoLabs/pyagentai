@@ -66,3 +66,9 @@ class AgentAIClient:
         url: str,
         ttl_for_screenshot: int = 3600,
     ) -> str: ...
+
+    # --- Get YouTube Transcript ---
+    async def get_youtube_transcript(
+        self,
+        url: str,
+    ) -> tuple[str, dict]: ...

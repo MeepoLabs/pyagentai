@@ -140,3 +140,27 @@ class AgentAIEndpoints(BaseModel):
             ],
         ),
     )
+
+    get_youtube_transcript: Endpoint = Field(
+        default=Endpoint(
+            url="/action/get_youtube_transcript",
+            url_type=UrlType.API,
+            method=RequestMethod.POST,
+            description=(
+                "Fetches the transcript of a YouTube video using"
+                " the video URL."
+            ),
+            requires_auth=True,
+            response_content_type="application/json",
+            request_content_type="application/json",
+            body_parameters=[
+                EndpointParameter(
+                    name="url",
+                    param_type=ParameterType.STRING,
+                    required=True,
+                    description="URL of the YouTube video.",
+                    validate_parameter=False,
+                )
+            ],
+        ),
+    )
